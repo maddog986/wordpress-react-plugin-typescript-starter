@@ -8,13 +8,9 @@ services:
       - ./dist:/var/www/wp-content/plugins/wordpress_plugin/
     ports:
       - 8084:80 # web port
-      - 3304:3306 # mysql
-      - 2224:2222 #used for Azure Web App Containers
     environment:
       - WEBSITE_HOSTNAME=localhost:8084
-      - MYSQL_ROOT_PASSWORD=root
-      - PHPMYADMIN_VERSION=4.9.1
-      - WORDPRESS_VERSION=5.4.1
+      - WORDPRESS_VERSION=latest
     restart: unless-stopped
     networks:
       wsp_network:

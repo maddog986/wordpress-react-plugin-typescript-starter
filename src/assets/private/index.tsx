@@ -1,14 +1,10 @@
 // Libs
 import * as React from "react";
 import * as ReactDom from "react-dom";
-import App from "./containers/App/index";
+import App from "./App";
 import "./index.scss";
-import GlobalProvider from "./store";
 
-ReactDom.render(
-  <GlobalProvider children={<App />} />,
-  document.getElementById("wsps_react")
-);
+ReactDom.render(<App />, document.getElementById("wordpress_plugin_react"));
 
 if (module.hot) {
   module.hot.accept();

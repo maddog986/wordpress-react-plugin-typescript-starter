@@ -3,5 +3,6 @@
     "**/*.map": true,
     "**/.git": true,
     "**/node_modules": true
+    // "dist": true
   }
 }

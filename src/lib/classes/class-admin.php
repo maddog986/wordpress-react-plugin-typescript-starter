@@ -39,7 +39,7 @@ new class('wordpress_plugin_admin', filemtime(__FILE__)) extends wpsp_base {
      */
     public function menu_page()
     {
-        echo "<div id=\"wsps_react\"></div>";
+        echo "<div id=\"wordpress_plugin_react\"></div>";
     }
 
     /**
@@ -61,7 +61,7 @@ new class('wordpress_plugin_admin', filemtime(__FILE__)) extends wpsp_base {
         // bootstrap and our css file
         $this->wp_enqueue_style($this->name, 'plugin-private.min.css');
 
-        // load javascript and localize our script to inject a NONCE that can be used to auth with wsapi: https://github.com/wp-api/node-wpapi
-        $this->wp_register_script($this->name, 'plugin-private.min.js', [], 'WP_API_Settings', [ 'root' => esc_url_raw(rest_url()), 'nonce' => wp_create_nonce('wp_rest') ]);
+        // load javascript
+        $this->wp_register_script($this->name, 'plugin-private.min.js');
     }
 };
