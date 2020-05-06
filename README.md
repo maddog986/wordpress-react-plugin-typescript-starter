@@ -11,6 +11,8 @@ What makes this so great? With a simple `docker-compose up -d --build` command, 
 dist: folder that contains all the src code compiled and ready for WordPress to run a plugin.
 src: folder that contains php code for the server side, and code that is compiled into client side code thanks to Webpack.
 
+More description later on...
+
 ## License
 
 The MIT License
