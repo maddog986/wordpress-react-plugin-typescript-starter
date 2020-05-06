@@ -6,9 +6,6 @@
  * README.md file in the root directory of this source tree.
  */
 
- // base class
-require_once('class-base.php');
-
 /**
  * wordpress_plugin.
  *
@@ -18,27 +15,7 @@ require_once('class-base.php');
  * @see		wpsp_base
  * @global
  */
-class wordpress_plugin extends wpsp_base
-{
-    /**
-     * __construct.
-     *
-     * @author	Drew Gauderman <drew@dpg.host>
-     * @since	v1.0.0
-     * @version	v1.0.0	Saturday, October 27th, 2018.
-     * @access	private
-     * @return	void
-     */
-    public function __construct()
-    {
-        parent::__construct('wordpress_plugin');
-
-        // dynamically load classes from the "classes" folder.
-        foreach (glob($this->plugin_path . "lib/classes/*.php") as $filename) {
-            include($filename);
-        }
-    }
-
+new class('wordpress_plugin', filemtime(__FILE__)) extends wpsp_base {
     /**
      * Loads all the frontend css styles & javascripts
      *
@@ -56,4 +33,4 @@ class wordpress_plugin extends wpsp_base
         // our JavaScript file
         $this->wp_enqueue_script($this->name, 'plugin-public.min.js', ['jquery']);
     }
-}
+};
