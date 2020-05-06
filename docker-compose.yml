@@ -5,7 +5,7 @@ services:
     container_name: wordpress-starter-react-plugin
     image: maddog986/php-nginx-mysql-server:latest
     volumes:
-      - ./dist:/var/www/wp-content/plugins/wordpress_plugin/
+      - ./wordpress_plugin:/var/www/wp-content/plugins/wordpress_plugin/
     ports:
       - 8084:80 # web port
     environment:

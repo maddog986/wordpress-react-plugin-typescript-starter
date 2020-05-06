@@ -7,12 +7,29 @@ const path = require("path"),
 	RenameWebpackPlugin = require('rename-webpack-plugin'),
 	ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin'),
 	{ CleanWebpackPlugin } = require('clean-webpack-plugin'),
-	WriteAssetsWebpackPlugin = require('write-assets-webpack-plugin')
+	WriteAssetsWebpackPlugin = require('write-assets-webpack-plugin'),
+	yaml = require('js-yaml'),
+	fs = require('fs')
 
 const package = require('./package.json')
 const packageName = package.name
 
 const isDev = process.env.NODE_ENV === "development"
+
+let devUrl = 'localhost:8084'
+
+if (isDev) {
+	// try to get websitehost name from docker-compose.yml
+	try {
+		const dockerCompose = yaml.safeLoad(fs.readFileSync('./docker-compose.yml', 'utf8'))
+		if (dockerCompose && dockerCompose.services && dockerCompose.services.hasOwnProperty('wordpress-starter-react-plugin')) {
+			let proxyUrl = dockerCompose.services['wordpress-starter-react-plugin'].environment.find(r => r.includes('WEBSITE_HOSTNAME='))
+			if (proxyUrl) devUrl = proxyUrl.slice('WEBSITE_HOSTNAME='.length)
+		}
+	} catch (e) {
+		console.log('Could not load docker-compose.yml')
+	}
+}
 
 module.exports = {
 	mode: isDev ? 'development' : 'production',
@@ -25,7 +42,7 @@ module.exports = {
 	},
 
 	output: {
-		path: path.resolve(__dirname, 'dist'),
+		path: path.resolve(__dirname, packageName),
 		sourceMapFilename: '[file].map',
 		filename: 'assets/js/plugin-[name].min.js',
 		publicPath: '/wp-content/plugins/wordpress_plugin/',
@@ -65,7 +82,7 @@ module.exports = {
 
 		// dynamically change the plugin class name to the package name
 		packageName !== 'wordpress_plugin' ? new ReplaceInFileWebpackPlugin([{
-			dir: 'dist',
+			dir: packageName,
 			test: /\.php$/,
 			rules: [
 				{
@@ -134,7 +151,7 @@ module.exports = {
 		port: 3000,
 		proxy: {
 			context: () => true,
-			target: 'http://localhost:8084/',
+			target: `http://${devUrl}/`,
 		},
 	},
 }
