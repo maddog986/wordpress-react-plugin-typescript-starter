@@ -1,0 +1,7 @@
+{
+  "files.exclude": {
+    "**/*.map": true,
+    "**/.git": true,
+    "**/node_modules": true
+  }
+}

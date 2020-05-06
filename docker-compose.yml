@@ -1,0 +1,28 @@
+# Compose file is designed to run this on a local machine for development.
+version: "3"
+services:
+  wordpress-starter-react-plugin:
+    container_name: wordpress-starter-react-plugin
+    image: maddog986/php-nginx-mysql-server:latest
+    volumes:
+      - ./dist:/var/www/wp-content/plugins/wordpress_plugin/
+    ports:
+      - 8084:80 # web port
+      - 3304:3306 # mysql
+      - 2224:2222 #used for Azure Web App Containers
+    environment:
+      - WEBSITE_HOSTNAME=localhost:8084
+      - MYSQL_ROOT_PASSWORD=root
+      - PHPMYADMIN_VERSION=4.9.1
+      - WORDPRESS_VERSION=5.4.1
+    restart: unless-stopped
+    networks:
+      wsp_network:
+        ipv4_address: 172.34.30.99
+
+networks:
+  wsp_network:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.34.30.0/16

@@ -1,0 +1,132 @@
+{
+  "name": "wordpress_plugin",
+  "version": "1.0.0",
+  "description": "A WordPress Starter React PLugin",
+  "author": {
+    "name": "Drew Gauderman <drew@dpg.host>"
+  },
+  "homepage": "https://dpg.host",
+  "private": true,
+  "scripts": {
+    "dev": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "@types/jest": "^25.2.1",
+    "@types/jquery": "^3.3.36",
+    "@types/node": "^13.13.4",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.7",
+    "autoprefixer": "9.7.6",
+    "babel-loader": "^8.1.0",
+    "bootstrap": "~4.4.1",
+    "browser-sync": "2.26.7",
+    "css-loader": "3.5.3",
+    "css-mquery-packer": "1.2.0",
+    "cssnano": "^4.1.10",
+    "gulp": "4.0.2",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-include": "^2.4.1",
+    "gulp-jshint": "2.1.0",
+    "gulp-postcss": "8.0.0",
+    "gulp-rename": "2.0.0",
+    "gulp-sass": "4.1.0",
+    "gulp-sourcemaps": "2.6.5",
+    "html-webpack-plugin": "^4.3.0",
+    "jshint": "2.11.0",
+    "mini-css-extract-plugin": "0.9.0",
+    "node-sass": "^4.14.0",
+    "postcss-color-rgba-fallback": "4.0.0",
+    "postcss-combine-duplicated-selectors": "8.1.0",
+    "postcss-flexbugs-fixes": "4.2.1",
+    "postcss-merge-rules": "4.0.3",
+    "postcss-sorting": "5.0.1",
+    "postcss-strip-inline-comments": "^0.1.5",
+    "sass-loader": "^8.0.2",
+    "terser-webpack-plugin": "^3.0.0",
+    "ts-loader": "^7.0.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "Chrome >= 45",
+    "Firefox >= 38",
+    "Edge >= 12",
+    "Explorer >= 10",
+    "iOS >= 9",
+    "Safari >= 9",
+    "Android >= 4.4",
+    "Opera >= 30"
+  ],
+  "gulp": {
+    "js_sources": [
+      "./src/assets/js/plugin-public.js",
+      "./src/assets/js/plugin-private.js"
+    ],
+    "js_output": "./dist/assets/js",
+    "sass_main": [
+      "./src/assets/scss/plugin-public.scss",
+      "./src/assets/scss/plugin-private.scss"
+    ],
+    "sass_watch": "./src/assets/scss/*.scss",
+    "sass_includes": [
+      "./node_modules/",
+      "./src/assets/scss/"
+    ],
+    "sass_include": [
+      "./src/assets/scss/"
+    ],
+    "css_move": [],
+    "css_output": "./dist/assets/css",
+    "fonts_move": [
+      "./node_modules/open-iconic/font/fonts/*"
+    ],
+    "fonts_output": "./dist/assets/fonts",
+    "minifi_prefix": ".min",
+    "webserver_url": "http://localhost:8082/",
+    "img_sources": "./src/assets/img/*.{png,jpg,jpeg}",
+    "img_output": "./dist/assets/img"
+  },
+  "dependencies": {
+    "@babel/preset-typescript": "^7.9.0",
+    "@bootstrap-styled/v4": "^3.4.0",
+    "@hot-loader/react-dom": "^16.13.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.2.0",
+    "@types/deepmerge": "^2.2.0",
+    "@types/react-dom": "^16.9.7",
+    "@types/react-hot-loader": "^4.1.1",
+    "@types/webpack-env": "^1.15.2",
+    "@types/wpapi": "^1.1.0",
+    "@wordpress/base-styles": "^1.7.0",
+    "@wordpress/block-library": "^2.17.0",
+    "browser-sync-webpack-plugin": "^2.2.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-hot-loader": "^1.4.4",
+    "deepmerge": "^4.2.2",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "gulp-uglify": "^3.0.2",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-dom": "^16.13.1",
+    "react-hot-loader": "^4.12.21",
+    "react-refresh": "^0.8.2",
+    "rename-webpack-plugin": "^2.0.0",
+    "replace-in-file-webpack-plugin": "^1.0.6",
+    "startbootstrap-sb-admin-2": "^4.0.7",
+    "style-loader": "^1.2.1",
+    "styled-components": "^5.1.0",
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-hot-middleware": "^2.25.0",
+    "wpapi": "^1.2.1",
+    "write-assets-webpack-plugin": "^1.0.5"
+  }
+}
