@@ -8,7 +8,7 @@ A WordPress Plugin Starter featuring React, Webpack, Typescript and Docker for a
 
 This is a starting point for someone who wants to develop a new Plugin for WordPress using React, Typescript and Webpack. It uses Docker for a quick and easy WordPress development stack.
 
-What makes this so great? With a simple `docker-compose up -d --build` command, you have a full WordPress instance running, with a plugin ready to be activated through the admin dashboard, AND, you can build a public, or admin (private) pages, using React with [React Refresh enabled](https://github.com/pmmmwh/react-refresh-webpack-plugin).
+What makes this so great? With a simple `docker-compose up -d --build` command, you have a full WordPress instance running, with a plugin already activated, AND, you can build a public, or admin (private) pages, using React with [React Refresh enabled](https://github.com/pmmmwh/react-refresh-webpack-plugin).
 
 **src**: Everything in this folder gets compiled into production code into a folder name that matches the package name.
 
