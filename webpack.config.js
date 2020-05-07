@@ -141,7 +141,15 @@ module.exports = {
 					'css-loader',
 					'sass-loader'
 				],
-			}
+			},
+			{
+				test: /\.(png|svg|jpg|gif)$/,
+				loader: 'file-loader',
+				options: {
+					name: 'assets/img/[name].[ext]',
+					esModule: false,
+				},
+			},
 		]
 	},
 
