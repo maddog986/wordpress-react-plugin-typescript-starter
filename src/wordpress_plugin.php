@@ -153,11 +153,21 @@ class wordpress_plugin_base
      * @param	string 	$hook         	The name of the WordPress action that is being registered.
      * @param	mixed  	$callback     	The name of the function definition on the $component.
      * @param	integer	$priority     	Optional. The priority at which the function should be fired. Default is 10.
-     * @param	integer	$accepted_args	Optional. The number of arguments that should be passed to the $callback. Default is 1.
+     * @param	integer	$accepted_args	Optional. The number of arguments that should be passed to the $callback. Default is 0 .
      * @return	void
      */
-    public function action($hook = '', $callback, $priority = 10, $accepted_args = 1)
+    public function action($hook = '', $callback, $priority = 10, $accepted_args = false)
     {
+        if ($accepted_args === false) {
+            if (is_array($callback)) {
+                $fct = new ReflectionMethod($callback[0], $callback[1]);
+                $accepted_args = $fct->getNumberOfRequiredParameters();
+            } else {
+                $fct = new ReflectionFunction('client_func');
+                $accepted_args = $fct->getNumberOfRequiredParameters();
+            }
+        }
+
         $this->add('action', $hook, $callback, $priority, $accepted_args);
     }
 
@@ -171,11 +181,21 @@ class wordpress_plugin_base
      * @param	string 	$hook         	Default: ''
      * @param	mixed  	$callback		string of function name, or function
      * @param	integer	$priority     	Default: 10
-     * @param	integer	$accepted_args	Default: 1
+     * @param	integer	$accepted_args
      * @return	void
      */
-    public function filter($hook = '', $callback, $priority = 10, $accepted_args = 1)
+    public function filter($hook = '', $callback, $priority = 10, $accepted_args = false)
     {
+        if ($accepted_args === false) {
+            if (is_array($callback)) {
+                $fct = new ReflectionMethod($callback[0], $callback[1]);
+                $accepted_args = $fct->getNumberOfRequiredParameters();
+            } else {
+                $fct = new ReflectionFunction('client_func');
+                $accepted_args = $fct->getNumberOfRequiredParameters();
+            }
+        }
+
         $this->add('filter', $hook, $callback, $priority, $accepted_args);
     }
 
