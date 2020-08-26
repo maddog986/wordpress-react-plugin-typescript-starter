@@ -18,19 +18,6 @@ const isDev = process.env.NODE_ENV === "development"
 
 let devUrl = 'localhost:8084'
 
-if (isDev) {
-	// try to get websitehost name from docker-compose.yml
-	try {
-		const dockerCompose = yaml.safeLoad(fs.readFileSync('./docker-compose.yml', 'utf8'))
-		if (dockerCompose && dockerCompose.services && dockerCompose.services.hasOwnProperty('wordpress-starter-react-plugin')) {
-			let proxyUrl = dockerCompose.services['wordpress-starter-react-plugin'].environment.find(r => r.includes('WEBSITE_HOSTNAME='))
-			if (proxyUrl) devUrl = proxyUrl.slice('WEBSITE_HOSTNAME='.length)
-		}
-	} catch (e) {
-		console.log('Could not load docker-compose.yml')
-	}
-}
-
 module.exports = {
 	mode: isDev ? 'development' : 'production',
 
@@ -66,13 +53,13 @@ module.exports = {
 
 		// plugin for React Hot Loader that keeps states for hooks
 		isDev && new ReactRefreshWebpackPlugin({
-			disableRefreshCheck: true
+			// disableRefreshCheck: true
 		}),
 
 		// copy all existing code over
-		new CopyPlugin([
-			{ from: 'src', to: './', ignore: ['*/private/**', '*/public/**'] },
-		]),
+		new CopyPlugin({
+			patterns: [{ from: 'src', to: './', globOptions: { ignore: ['**/private/**', '**/public/**', '**/scss/', '**.psd'] } }],
+		}),
 
 		// rename php files to match the plugin name
 		packageName !== 'wordpress_plugin' ? new RenameWebpackPlugin({

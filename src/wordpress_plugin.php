@@ -76,14 +76,14 @@ class wordpress_plugin_base
      * @var		string	$version
      * @access	protected
      */
-    protected $plugin_url;
+    protected $url;
 
     /**
      * @since	v1.0.0
      * @var		string	$version
      * @access	protected
      */
-    protected $plugin_path;
+    protected $path;
 
     /**
      * __construct
@@ -102,8 +102,8 @@ class wordpress_plugin_base
 
         $this->name = $name;
         $this->version = $version;
-        $this->plugin_url = plugin_dir_url(__FILE__);
-        $this->plugin_path = plugin_dir_path(__FILE__);
+        $this->url = plugin_dir_url(__FILE__);
+        $this->path = plugin_dir_path(__FILE__);
 
         //debug mode enabled
         if ($this->is_debug()) {
@@ -321,7 +321,7 @@ class wordpress_plugin_base
      */
     protected function get_template($fileName = '', $arg = null)
     {
-        include($this->plugin_path . "template-parts/$fileName.php");
+        include($this->path . "template-parts/$fileName.php");
     }
 
     /**
@@ -336,7 +336,7 @@ class wordpress_plugin_base
      */
     protected function get_asset_img_path($fileName = '')
     {
-        return $this->plugin_path . "assets/img/$fileName";
+        return $this->path . "assets/img/$fileName";
     }
 
     /**
@@ -351,7 +351,7 @@ class wordpress_plugin_base
      */
     protected function get_asset_css_url($fileName = '')
     {
-        return $this->plugin_url . "assets/css/$fileName";
+        return $this->url . "assets/css/$fileName";
     }
 
     /**
@@ -366,7 +366,7 @@ class wordpress_plugin_base
      */
     protected function get_asset_css_version($fileName = '')
     {
-        return @filemtime($this->plugin_path . "assets/css/$fileName");
+        return @filemtime($this->path . "assets/css/$fileName");
     }
 
     /**
@@ -381,7 +381,7 @@ class wordpress_plugin_base
      */
     protected function get_asset_js_version($fileName = '')
     {
-        return @filemtime($this->plugin_path . "assets/js/$fileName");
+        return @filemtime($this->path . "assets/js/$fileName");
     }
 
     /**
@@ -396,7 +396,7 @@ class wordpress_plugin_base
      */
     protected function get_asset_js_url($fileName = '')
     {
-        return $this->plugin_url . "assets/js/$fileName";
+        return $this->url . "assets/js/$fileName";
     }
 
     /**
