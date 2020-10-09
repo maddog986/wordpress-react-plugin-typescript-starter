@@ -12,7 +12,7 @@ services:
       - WEBSITE_HOSTNAME=localhost:3000 # wordpress goes through webpack dev server
       - WORDPRESS_VERSION=latest
       - WORDPRESS_TITLE=WordPress
-      - WORDPRESS_INSTALL_PLUGIN=wordpress_plugin
+      - WORDPRESS_ACTIVATE_PLUGIN=wordpress_plugin
       - WORDPRESS_ADMIN_USERNAME=admin
       - WORDPRESS_ADMIN_PASSWORD=admin
       - WORDPRESS_ADMIN_EMAIL=noemail@domain.com
