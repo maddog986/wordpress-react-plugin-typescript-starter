@@ -8,7 +8,6 @@ const path = require("path"),
 	ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin'),
 	{ CleanWebpackPlugin } = require('clean-webpack-plugin'),
 	WriteAssetsWebpackPlugin = require('write-assets-webpack-plugin'),
-	yaml = require('js-yaml'),
 	fs = require('fs')
 
 const package = require('./package.json')
