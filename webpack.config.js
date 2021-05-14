@@ -1,37 +1,56 @@
+/**
+ * Copyright (C) 2020. Drew Gauderman
+ *
+ * This source code is licensed under the MIT license found in the
+ * README.md file in the root directory of this source tree.
+ */
+
 const path = require("path"),
 	webpack = require('webpack'),
 	TerserPlugin = require('terser-webpack-plugin'),
 	MiniCssExtractPlugin = require('mini-css-extract-plugin'),
-	ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'),
 	CopyPlugin = require('copy-webpack-plugin'),
-	RenameWebpackPlugin = require('rename-webpack-plugin'),
 	ReplaceInFileWebpackPlugin = require('replace-in-file-webpack-plugin'),
-	{ CleanWebpackPlugin } = require('clean-webpack-plugin'),
-	WriteAssetsWebpackPlugin = require('write-assets-webpack-plugin'),
-	fs = require('fs')
+	{ CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 const package = require('./package.json')
 const packageName = package.name
+const packageFolder = path.resolve(__dirname, packageName)
+const isDevelopment = process.env.NODE_ENV !== "production"
+const devUrl = 'localhost:8084'
 
-const isDev = process.env.NODE_ENV === "development"
+const entries = {
+	"public": path.resolve(__dirname, "react", "public", "index.tsx"),
+	"private": path.resolve(__dirname, "react", "private", "index.tsx"),
+}
 
-let devUrl = 'localhost:8084'
+const entry = isDevelopment ? (process.env.ENTRY ? {
+	[process.env.ENTRY]: entries[process.env.ENTRY]
+} : {
+	"public": entries.public,
+	"private": entries.private
+}) : entries
+
+console.log('webpack entry:', entry, "\n")
 
 module.exports = {
-	mode: isDev ? 'development' : 'production',
+	mode: isDevelopment ? 'development' : 'production',
 
-	devtool: isDev ? 'source-map' : false,
+	devtool: isDevelopment ? 'source-map' : false,
 
-	entry: {
-		public: path.resolve(__dirname, "src", "assets", "public", "index.tsx"),
-		private: path.resolve(__dirname, "src", "assets", "private", "index.tsx")
+	watchOptions: {
+		poll: 1000,
+		aggregateTimeout: 600,
+		ignored: ['**/site', '**/node_modules']
 	},
 
+	entry,
+
 	output: {
-		path: path.resolve(__dirname, packageName),
+		path: packageFolder,
 		sourceMapFilename: '[file].map',
-		filename: 'assets/js/plugin-[name].min.js',
-		publicPath: '/wp-content/plugins/wordpress_plugin/',
+		filename: `assets/js/plugin-[name].min.js`,
+		publicPath: `/wp-content/plugins/${packageName}/`,
 	},
 
 	resolve: {
@@ -39,60 +58,107 @@ module.exports = {
 		modules: ['node_modules'],
 	},
 
-	devtool: isDev ? 'source-map' : false,
+	devtool: isDevelopment ? 'source-map' : false,
+
+	module: {
+		noParse: [
+			/[\/\\]node_modules[\/\\]jquery[\/\\]dist[\/\\]jquery\.min\.js$/
+		],
+		rules: [
+			{
+				test: /\.(t|j)sx?$/,
+				exclude: /node_modules/,
+				use: "babel-loader",
+			},
+			{
+				test: /\.(sa|sc|c)ss$/,
+				use: [
+					{
+						loader: MiniCssExtractPlugin.loader,
+						options: {
+							esModule: true,
+						},
+					},
+					'css-loader',
+					'sass-loader'
+				],
+			},
+			{
+				test: /\.(ttf|eot|otf|woff|png|svg|jpg|gif)$/,
+				loader: 'file-loader',
+				options: {
+					name: 'assets/img/[name].[ext]',
+					esModule: false,
+				},
+			}
+		],
+	},
 
 	plugins: [
+		new webpack.DefinePlugin({
+			__VERSION__: JSON.stringify(package.version),
+			process: {
+				env: {
+					NODE_ENV: JSON.stringify(isDevelopment ? 'development' : 'production')
+				}
+			}
+		}),
+
 		// clean up dist folder
-		!isDev && new CleanWebpackPlugin(),
+		!isDevelopment && new CleanWebpackPlugin(),
 
 		// dump css into its own files
 		new MiniCssExtractPlugin({
-			filename: 'assets/css/plugin-[name].min.css',
+			filename: `assets/css/plugin-[name].min.css`,
 		}),
-
-		// plugin for React Hot Loader that keeps states for hooks
-		isDev && new ReactRefreshWebpackPlugin({
-			// disableRefreshCheck: true
-		}),
-
-		// copy all existing code over
-		new CopyPlugin({
-			patterns: [{ from: 'src', to: './', globOptions: { ignore: ['**/private/**', '**/public/**', '**/scss/', '**.psd'] } }],
-		}),
-
-		// rename php files to match the plugin name
-		packageName !== 'wordpress_plugin' ? new RenameWebpackPlugin({
-			originNameReg: "wordpress_plugin.php",
-			targetName: `${packageName}.php`
-		}) : false,
 
 		// dynamically change the plugin class name to the package name
-		packageName !== 'wordpress_plugin' ? new ReplaceInFileWebpackPlugin([{
-			dir: packageName,
+		new ReplaceInFileWebpackPlugin([{
+			dir: packageFolder,
 			test: /\.php$/,
 			rules: [
 				{
-					search: /wordpress_plugin/g,
+					search: new RegExp(`wordpress_plugin`, 'g'),
 					replace: packageName
 				}
 			]
-		}]) : false,
+		}]),
 
-		// force dev-server to write php files to disk when developing
-		isDev && new WriteAssetsWebpackPlugin({ force: true, extension: ['php'] }),
+		// copy all existing code over
+		new CopyPlugin({
+			patterns: [
+				{
+					from: path.resolve(__dirname, "src"),
+					to: './',
+					globOptions: {
+						// ignore these files
+						ignore: ['**/private/**', '**/public/**', '**/scss/**', '**.scss', '**.psd']
+					}
+				}
+			],
+			options: {
+				concurrency: 100
+			}
+		}),
 
+		new webpack.ProvidePlugin({
+			$: "jquery",
+			jQuery: "jquery",
+			'window.jQuery': 'jquery'
+		})
 	].filter(Boolean),
 
 	externals: {
-		// jquery is loaded by WordPress
+		$: 'jquery',
 		jquery: 'jQuery'
 	},
 
 	optimization: {
-		minimize: !isDev,
+		// runtimeChunk: 'single',
+		minimize: !isDevelopment,
 		minimizer: [
 			// https://webpack.js.org/plugins/terser-webpack-plugin/
-			!isDev && new TerserPlugin({
+			!isDevelopment && new TerserPlugin({
 				terserOptions: {
 					output: {
 						comments: false,
@@ -103,46 +169,12 @@ module.exports = {
 		].filter(Boolean),
 	},
 
-	module: {
-		rules: [
-			{
-				test: /\.tsx?$/,
-				exclude: /node_modules/,
-				use: 'babel-loader',
-			},
-			{
-				test: /\.html$/,
-				use: 'html-loader'
-			},
-			{
-				test: /\.(sa|sc|c)ss$/,
-				use: [
-					{
-						loader: MiniCssExtractPlugin.loader,
-						options: {
-							hmr: isDev,
-							esModule: true,
-						},
-					},
-					'css-loader',
-					'sass-loader'
-				],
-			},
-			{
-				test: /\.(png|svg|jpg|gif)$/,
-				loader: 'file-loader',
-				options: {
-					name: 'assets/img/[name].[ext]',
-					esModule: false,
-				},
-			},
-		]
-	},
-
 	devServer: {
-		hot: true,
+		compress: true,
 		inline: true,
 		port: 3000,
+		writeToDisk: true,
+		hot: true,
 		proxy: {
 			context: () => true,
 			target: `http://${devUrl}/`,

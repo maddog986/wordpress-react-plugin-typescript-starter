@@ -5,15 +5,20 @@ services:
     container_name: wordpress-starter-react-plugin
     image: maddog986/php-nginx-mysql-server:latest
     volumes:
-      - ./wordpress_plugin:/var/www/wp-content/plugins/wordpress_plugin/
+      - ./wordpress_plugin:/home/site/wwwroot/wwwroot/wp-content/plugins/wordpress_plugin
     ports:
       - 8084:80 # web port
+      # - 3306:3306 # mysql
+      # - 2222:2222 #used for Azure Web App Containers
     environment:
+      - PHPMYADMIN_VERSION=5.1.0
       - WEBSITE_HOSTNAME=localhost:3000 # wordpress goes through webpack dev server
       - WORDPRESS_INSTALL=true
       - WORDPRESS_TITLE=WordPress
       - WORDPRESS_ADMIN_EMAIL=noemail@domain.com
-      - WORDPRESS_INSTALL_PLUGIN=wordpress_plugin
+      - WORDPRESS_ACTIVATE_PLUGIN=wordpress_plugin
+      - WORDPRESS_ADMIN_USERNAME=admin
+      - WORDPRESS_ADMIN_PASSWORD=admin
     restart: unless-stopped
     networks:
       wsp_network:

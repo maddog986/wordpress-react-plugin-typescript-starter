@@ -1,8 +1,7 @@
-// Libs
-import * as React from "react";
-import * as ReactDom from "react-dom";
+import React from "react";
+import ReactDom from "react-dom";
 import App from "./App";
-import "./index.scss";
+import "./index.scss"; // import styles for private side
 
 ReactDom.render(<App />, document.getElementById("wordpress_plugin_react"));
 
